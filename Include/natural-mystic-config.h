@@ -60,6 +60,25 @@
 /* Define to enable torch light flickering effect. */
 #define ENABLE_TORCH_FLICKER 1
 
+/* Define to enable aurora borealis (northern lights) at night, ported from NewB. */
+#define ENABLE_AURORA 1
+
+/* Aurora brightness. 0.4 dim ~ 4.0 very bright. */
+#define AURORA_BRIGHTNESS 1.2
+
+/* Aurora animation speed. 0.0 static ~ 0.3 very fast. */
+#define AURORA_VELOCITY 0.03
+
+/* Aurora pattern scale. 0.002 large ~ 0.4 tiny. */
+#define AURORA_SCALE 0.04
+
+/* Aurora curtain thickness. 0.04 thin ~ 0.4 thick. */
+#define AURORA_WIDTH 0.18
+
+/* Aurora colors: purple -> teal. */
+#define AURORA_COL1 vec3(0.65, 0.2, 1.0)
+#define AURORA_COL2 vec3(0.1, 1.0, 0.85)
+
 /* Define to enable waves of water and leaves. */
 #define ENABLE_WAVES 1
 
