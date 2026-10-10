@@ -48,7 +48,8 @@ jobs:
 
       - name: Build with Lazurite (windows + android + ios)
         run: |
-          python -m lazurite build . -p windows,android,ios --shaderc ./shaderc.exe -o build
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          python -m lazurite build . -p windows android ios -m Clouds Particle RenderChunk Sky Stars SunMoon Weather --shaderc ./shaderc.exe -o build
           dir build
 
       - name: Package .mcpack
