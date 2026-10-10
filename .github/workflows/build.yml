@@ -31,7 +31,7 @@ jobs:
       - name: Install Lazurite (latest)
         run: |
           python -m pip install --upgrade pip
-          pip install --upgrade lazurite
+          pip install lazurite==0.10.0
 
       - name: Download shaderc + NEW vanilla materials (1.26.51)
         shell: pwsh
