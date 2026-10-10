@@ -1,0 +1,74 @@
+name: Build Natural Mystic Plus
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'Clouds/**'
+      - 'Include/**'
+      - 'Particle/**'
+      - 'RenderChunk/**'
+      - 'Sky/**'
+      - 'Stars/**'
+      - 'SunMoon/**'
+      - 'Weather/**'
+      - 'project.json'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Lazurite (latest)
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade lazurite
+
+      - name: Download shaderc + NEW vanilla materials (1.26.51)
+        shell: pwsh
+        run: |
+          Write-Host "Downloading shaderc (Windows)..."
+          Invoke-WebRequest -Uri "https://github.com/devendrn/newb-shader/releases/download/dev/shaderc-win-x64.exe" -OutFile "shaderc.exe"
+          Write-Host "Downloading NEW vanilla materials 1.26.51 (format v26)..."
+          Invoke-WebRequest -Uri "https://github.com/devendrn/newb-shader/releases/download/dev/src-materials-1.26.51.zip" -OutFile "materials.zip"
+          Write-Host "Extracting to ../vanilla (merge_source)..."
+          Expand-Archive -Path "materials.zip" -DestinationPath "../vanilla" -Force
+          Get-ChildItem ../vanilla | Select-Object -First 10
+          Write-Host "Lazurite version:"
+          python -m lazurite --help | Select-Object -First 20
+
+      - name: Build with Lazurite (windows + android + ios)
+        run: |
+          python -m lazurite build . -p windows,android,ios --shaderc ./shaderc.exe -o build
+          dir build
+
+      - name: Package .mcpack
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path pack/renderer/materials | Out-Null
+          Copy-Item build/*.material.bin pack/renderer/materials/ -Force
+          Get-ChildItem pack/renderer/materials/
+          Copy-Item manifest.json pack/manifest.json -Force
+          Copy-Item splashes.json pack/splashes.json -Force -ErrorAction SilentlyContinue
+          Copy-Item pack_icon.png pack/pack_icon.png -Force -ErrorAction SilentlyContinue
+          Compress-Archive -Path pack/manifest.json,pack/renderer,pack/splashes.json,pack/pack_icon.png -DestinationPath natural-mystic-plus.mcpack -Force
+          Get-ChildItem *.mcpack
+          Write-Host "Pack contents:"
+          Expand-Archive -Path natural-mystic-plus.mcpack -DestinationPath pack-check -Force
+          Get-ChildItem -Recurse pack-check | Select-Object FullName, Length
+
+      - name: Upload mcpack artifact (Download from here)
+        uses: actions/upload-artifact@v4
+        with:
+          name: natural-mystic-plus-mcpack
+          path: natural-mystic-plus.mcpack
+          if-no-files-found: error

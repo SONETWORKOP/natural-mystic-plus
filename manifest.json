@@ -1,0 +1,18 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Shaders aiming to be as realistic as possible.\nModder: Rin\nOriginal Author: PHO",
+        "name": "§4Natural §6Mystic §2Plus",
+        "uuid": "98842c83-24e1-4354-83ea-a66cd4395757",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 26, 0]
+    },
+    "modules": [
+        {
+            "description": "Shaders aiming to be as realistic as possible.\nModder: Rin\nOriginal Author: PHO",
+            "type": "resources",
+            "uuid": "51ed9395-e889-477c-804b-af25d479b761",
+            "version": [1, 0, 0]
+        }
+    ]
+}
